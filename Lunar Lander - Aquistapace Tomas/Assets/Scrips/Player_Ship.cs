@@ -9,9 +9,6 @@ public class Player_Ship : MonoBehaviour
     public float forceImpulse = 2f;
     public float actualAltitude = 0f;
 
-    [Header("External References")]
-    public float limitAltitude = -35f;
-
     Rigidbody2D rig;
 
     private void Start()

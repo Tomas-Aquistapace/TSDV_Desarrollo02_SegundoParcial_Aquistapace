@@ -271,6 +271,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerRef: {fileID: 751718594}
   offset: {x: 0, y: 0, z: -65}
+  zoomLimit: {x: 0, y: 0, z: -30}
+  smoothSpeed: 0.016
   enableZoom: 0
 --- !u!20 &519420031
 Camera:
@@ -408,7 +410,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1293442885}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -35, z: 0}
+  m_LocalPosition: {x: 0, y: -38, z: 0}
   m_LocalScale: {x: 160, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -608,6 +610,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player_Ship
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225674799808734836, guid: 1f78be5a18c1bc5478352014517a9556,
+        type: 3}
+      propertyPath: limitAltitude
+      value: -40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f78be5a18c1bc5478352014517a9556, type: 3}
