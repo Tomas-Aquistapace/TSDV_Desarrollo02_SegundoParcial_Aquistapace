@@ -1,24 +1,32 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Player_Ship : MonoBehaviour
 {
+    public delegate void NextLevel();
+    public static NextLevel WinLevel;
+
     [Header("Stats")]
-    public float speedRotation = 2f;
-    public float forceImpulse = 2f;
+    [SerializeField] private float speedRotation = 2f;
+    [SerializeField] private float forceImpulse = 2f;
+    [SerializeField] private float gravityAffected = 1f;
     public float actualAltitude = 0f;
-    public float gravityAffected = 1f;
+
+    [Header("Points")]
+    [SerializeField] private int points = 0;
+    [SerializeField] private int basePoints = 100;
 
     [Header("Fuel Properties")]
-    public float startingFuel = 500f;
-    public float actualFuel;
-    public float fuelConsuption = 2f;
+    [SerializeField] private float startingFuel = 500f;
+    [SerializeField] private float actualFuel;
+    [SerializeField] private float fuelConsuption = 2f;
 
     [Header("Lose Conditions")]
-    public float fallSpeed = 0f;
-    public float limitFallSpeed = 0f;
-    public float limitDegrees = 45f;
+    [SerializeField] private float fallSpeed = 0f;
+    [SerializeField] private float limitFallSpeed = 0f;
+    [SerializeField] private float limitDegrees = 45f;
+    [SerializeField] private float stopSeconds = 1f;
 
     [Header("Art Assets")]
     public ParticleSystem propellantFire;
@@ -30,19 +38,23 @@ public class Player_Ship : MonoBehaviour
         landed
     }
     States actualState;
+
+    Animator anim;
     Rigidbody2D rig;
+    Vector3 initialPosition;
 
     private void Start()
     {
-        actualState = States.isFlying;
+        initialPosition = transform.position;
 
-        fallSpeed = 0;
-        actualFuel = startingFuel;
-        actualAltitude = (int)transform.position.y;
-
+        anim = transform.GetComponent<Animator>();
         rig = transform.GetComponent<Rigidbody2D>();
+        points = 0;
+        actualFuel = startingFuel;
 
-        rig.gravityScale = gravityAffected;
+        WinLevel += InitialiceShip;
+
+        InitialiceShip();
 
         propellantFire.Stop();
     }
@@ -98,13 +110,60 @@ public class Player_Ship : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if ((transform.rotation.z > limitDegrees) || (transform.rotation.z < -limitDegrees) || (fallSpeed >= limitFallSpeed))
+        if (collision.transform.tag != "SafeZone" ||
+            (transform.rotation.z > limitDegrees) || (transform.rotation.z < -limitDegrees) || (fallSpeed >= limitFallSpeed))
         {
             actualState = States.crashed;
+
+            CrashAnimation();
+
+            StartCoroutine(WaitAFewSeconds(false));
         }
         else
         {
             actualState = States.landed;
+
+            points += collision.transform.GetComponent<SafeZone>().EarnPoints(basePoints);
+
+            rig.simulated = false;
+
+            StartCoroutine(WaitAFewSeconds(true));
         }
+    }
+
+    IEnumerator WaitAFewSeconds(bool state)
+    {
+        yield return new WaitForSeconds(stopSeconds);
+
+        if (state) WinLevel();
+        else InitialiceShip();
+    }
+
+    // -----------------
+
+    void CrashAnimation()
+    {
+        anim.SetBool("Crash", true);
+        rig.simulated = false;
+    }
+
+    public void InitialiceShip()
+    {
+        actualState = States.isFlying;
+
+        transform.position = initialPosition;
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+
+        actualAltitude = (int)transform.position.y;
+
+        rig.simulated = true;
+        rig.gravityScale = gravityAffected;
+        rig.MoveRotation(0);
+
+        rig.velocity = Vector2.zero;
+
+        propellantFire.Stop();
+
+        anim.SetBool("Crash", false);
     }
 }

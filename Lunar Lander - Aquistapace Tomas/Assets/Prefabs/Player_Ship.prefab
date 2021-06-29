@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2225674799808734838}
   - component: {fileID: 2225674799808734836}
   - component: {fileID: 7363572597548982673}
+  - component: {fileID: 2225674799352198836}
   m_Layer: 8
   m_Name: Player_Ship
   m_TagString: Untagged
@@ -120,14 +121,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedRotation: 35
   forceImpulse: 0.2
-  actualAltitude: 0
   gravityAffected: 0.03
+  actualAltitude: 0
+  points: 0
+  basePoints: 100
   startingFuel: 500
   actualFuel: 0
   fuelConsuption: 10.5
   fallSpeed: 0
   limitFallSpeed: 10
-  limitDegrees: 45
+  limitDegrees: 20
+  stopSeconds: 5
   propellantFire: {fileID: 7752830355865853220}
 --- !u!60 &7363572597548982673
 PolygonCollider2D:
@@ -292,6 +296,25 @@ PolygonCollider2D:
       - {x: 0.62, y: -0.32}
       - {x: 0.62, y: -0.35999998}
       - {x: 0.59999996, y: -0.35}
+--- !u!95 &2225674799352198836
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2225674799808734835}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 79e03e2bd5d1bbd439e52edc9fd6def2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2225674799322268260
 PrefabInstance:
   m_ObjectHideFlags: 0
