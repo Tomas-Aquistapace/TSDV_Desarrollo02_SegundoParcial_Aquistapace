@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseBehaviour : MonoBehaviour
 {
@@ -19,5 +20,15 @@ public class PauseBehaviour : MonoBehaviour
         pauseButton.SetActive(true);
 
         Time.timeScale = 1f;
+    }
+
+    public void RestartAndDisablePause(string scene)
+    {
+        pauseScreen.SetActive(false);
+        pauseButton.SetActive(true);
+
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(scene);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-
 public class Player_Ship : MonoBehaviour
 {
     public delegate void NextLevel();
     public static NextLevel WinLevel;
+    public delegate void EndGame();
+    public static EndGame FinishMission;
 
     [Header("Stats")]
     [SerializeField] private float speedRotation = 2f;
@@ -35,7 +36,8 @@ public class Player_Ship : MonoBehaviour
     {
         isFlying,
         crashed,
-        landed
+        landed,
+        finishMission
     }
     States actualState;
 
@@ -117,7 +119,15 @@ public class Player_Ship : MonoBehaviour
 
             CrashAnimation();
 
-            StartCoroutine(WaitAFewSeconds(false));
+            if (actualFuel <= 0)
+            {
+                actualState = States.finishMission;
+                StartCoroutine(WaitAFewSeconds("Finish"));
+            }
+            else
+            {
+                StartCoroutine(WaitAFewSeconds("Crash"));
+            }
         }
         else
         {
@@ -127,16 +137,34 @@ public class Player_Ship : MonoBehaviour
 
             rig.simulated = false;
 
-            StartCoroutine(WaitAFewSeconds(true));
+            if (actualFuel <= 0)
+            {
+                actualState = States.finishMission;
+                StartCoroutine(WaitAFewSeconds("Finish"));
+            }
+            else
+            {
+                StartCoroutine(WaitAFewSeconds("Win"));
+            }
         }
     }
 
-    IEnumerator WaitAFewSeconds(bool state)
+    IEnumerator WaitAFewSeconds(string situation)
     {
         yield return new WaitForSeconds(stopSeconds);
 
-        if (state) WinLevel();
-        else InitialiceShip();
+        switch (situation)
+        {
+            case "Crash":
+                InitialiceShip();
+                break;
+            case "Win":
+                WinLevel();
+                break;
+            case "Finish":
+                FinishMission();
+                break;
+        }
     }
 
     // -----------------
@@ -147,7 +175,7 @@ public class Player_Ship : MonoBehaviour
         rig.simulated = false;
     }
 
-    public void InitialiceShip()
+    void InitialiceShip()
     {
         actualState = States.isFlying;
 
