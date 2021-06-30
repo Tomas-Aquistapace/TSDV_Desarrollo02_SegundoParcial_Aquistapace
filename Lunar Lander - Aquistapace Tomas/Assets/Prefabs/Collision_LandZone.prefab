@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 191964056486902618}
   m_Layer: 0
   m_Name: Bar - Collision
-  m_TagString: Untagged
+  m_TagString: SafeZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

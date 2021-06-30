@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public int actualLevel;
     public static LevelManager instance;
+    public int actualLevel;
 
     public List<GameObject> terrainsPref;
 

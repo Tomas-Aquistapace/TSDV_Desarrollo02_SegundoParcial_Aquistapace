@@ -15,16 +15,17 @@ public class Player_Ship : MonoBehaviour
     public float actualAltitude = 0f;
 
     [Header("Points")]
-    [SerializeField] private int points = 0;
+    public int points = 0;
     [SerializeField] private int basePoints = 100;
 
     [Header("Fuel Properties")]
     [SerializeField] private float startingFuel = 500f;
-    [SerializeField] private float actualFuel;
+    public float actualFuel;
     [SerializeField] private float fuelConsuption = 2f;
 
     [Header("Lose Conditions")]
-    [SerializeField] private float fallSpeed = 0f;
+    public float fallSpeed = 0f;
+    [HideInInspector] public Vector2 shipSpeed;
     [SerializeField] private float limitFallSpeed = 0f;
     [SerializeField] private float limitDegrees = 45f;
     [SerializeField] private float stopSeconds = 1f;
@@ -54,11 +55,19 @@ public class Player_Ship : MonoBehaviour
         points = 0;
         actualFuel = startingFuel;
 
-        WinLevel += InitialiceShip;
-
         InitialiceShip();
 
         propellantFire.Stop();
+    }
+
+    private void OnEnable()
+    {
+        WinLevel += InitialiceShip;
+    }
+
+    private void OnDisable()
+    {
+        WinLevel -= InitialiceShip;
     }
 
     private void Update()
@@ -79,17 +88,30 @@ public class Player_Ship : MonoBehaviour
     {
         float horizontal = Input.GetAxis("Horizontal");
 
-        transform.Rotate(new Vector3(0, 0, -horizontal), speedRotation * Time.deltaTime);
+        if (transform.eulerAngles.z <= 90.0f || transform.eulerAngles.z >= 270)
+        {
+            transform.Rotate(new Vector3(0, 0, -horizontal), speedRotation * Time.deltaTime);
+        }
+        if (transform.eulerAngles.z > 90.0f && transform.eulerAngles.z < 180.0f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+        }
+        if (transform.eulerAngles.z < 270.0f && transform.eulerAngles.z > 180.0f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 270.0f);
+        }
     }
 
     void ForceImpulse()
     {
-        if (Input.GetKey("space") && actualFuel > 0)
+        if ((Input.GetKey("space") || Input.GetKey(KeyCode.UpArrow)) && actualFuel > 0)
         {
             rig.AddForce(transform.up * forceImpulse, ForceMode2D.Force);
 
             actualFuel -= fuelConsuption * Time.deltaTime;
-            
+
+            UI_Manager.RotateFuelArrow?.Invoke(startingFuel);
+
             if (actualFuel < 0)
                 actualFuel = 0;
 
@@ -105,9 +127,11 @@ public class Player_Ship : MonoBehaviour
     {
         actualAltitude = transform.position.y;
 
-        Vector3 vel = rig.velocity;
+        shipSpeed = rig.velocity;
 
-        fallSpeed = vel.magnitude * 10f;
+        fallSpeed = shipSpeed.magnitude * 10f;
+
+        UI_Manager.RotateSpeedArrow?.Invoke(fallSpeed);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
