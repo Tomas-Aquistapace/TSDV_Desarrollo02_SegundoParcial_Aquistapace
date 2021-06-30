@@ -7,8 +7,9 @@ public class LevelManager : MonoBehaviour
     public int actualLevel;
 
     public List<GameObject> terrainsPref;
-
     public GameObject FinalScreen;
+
+    GameObject actualTerrain;
 
     void Start()
     {
@@ -28,13 +29,17 @@ public class LevelManager : MonoBehaviour
     {
         int rand = Random.Range(1, terrainsPref.Count);
 
-        GameObject go = Instantiate(terrainsPref[rand]);
-        go.transform.name = terrainsPref[rand].transform.name;
+        actualTerrain = Instantiate(terrainsPref[rand]);
+        actualTerrain.transform.name = terrainsPref[rand].transform.name;
     }
 
-    void ChangeLevel()
+    void ChangeLevel(bool value)
     {
-        actualLevel++;
+        Destroy(actualTerrain);
+        SelectLevel();
+
+        if(value)
+            actualLevel++;
     }
     
     void CallFinalScreen()

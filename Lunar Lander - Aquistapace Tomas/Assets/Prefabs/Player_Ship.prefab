@@ -129,6 +129,7 @@ MonoBehaviour:
   actualFuel: 0
   fuelConsuption: 10.5
   fallSpeed: 0
+  shipSpeed: {x: 0, y: 0}
   limitFallSpeed: 10
   limitDegrees: 20
   stopSeconds: 5

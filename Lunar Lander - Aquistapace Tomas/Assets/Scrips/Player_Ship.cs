@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class Player_Ship : MonoBehaviour
 {
-    public delegate void NextLevel();
+    public delegate void NextLevel(bool value);
     public static NextLevel WinLevel;
     public delegate void EndGame();
     public static EndGame FinishMission;
 
     [Header("Stats")]
     [SerializeField] private float speedRotation = 2f;
-    [SerializeField] private float forceImpulse = 2f;
+    [SerializeField] private float forceImpulse = 0.2f; // Por temas del buildeo se tiene que poner 0.5f en "forceImpulse" para que funcione como se espera el impulso. Para el inspector, dejarlo en 0.2f
     [SerializeField] private float gravityAffected = 1f;
     public float actualAltitude = 0f;
 
@@ -55,7 +55,7 @@ public class Player_Ship : MonoBehaviour
         points = 0;
         actualFuel = startingFuel;
 
-        InitialiceShip();
+        InitialiceShip(true);
 
         propellantFire.Stop();
     }
@@ -180,10 +180,11 @@ public class Player_Ship : MonoBehaviour
         switch (situation)
         {
             case "Crash":
-                InitialiceShip();
+                //InitialiceShip(true);
+                WinLevel(false);
                 break;
             case "Win":
-                WinLevel();
+                WinLevel(true);
                 break;
             case "Finish":
                 FinishMission();
@@ -199,7 +200,7 @@ public class Player_Ship : MonoBehaviour
         rig.simulated = false;
     }
 
-    void InitialiceShip()
+    void InitialiceShip(bool notUsed)
     {
         actualState = States.isFlying;
 
