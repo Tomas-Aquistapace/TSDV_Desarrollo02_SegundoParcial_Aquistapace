@@ -453,8 +453,8 @@ MonoBehaviour:
   actualLevel: 1
   terrainsPref:
   - {fileID: 8849715826875339376, guid: 7942f1f66d465514eb06a13d86a70ce4, type: 3}
-  - {fileID: 5248247747747839882, guid: 216ef997e4a9baf4f992092b8643749b, type: 3}
   - {fileID: 2338172699875961973, guid: f362c2cfe0a56cd49be80eb807372262, type: 3}
+  - {fileID: 5248247747747839882, guid: 216ef997e4a9baf4f992092b8643749b, type: 3}
   FinalScreen: {fileID: 1920911085}
 --- !u!114 &247596679
 MonoBehaviour:

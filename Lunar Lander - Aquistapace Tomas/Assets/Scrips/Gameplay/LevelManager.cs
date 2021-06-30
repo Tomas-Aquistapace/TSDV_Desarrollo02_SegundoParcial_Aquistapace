@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour
 
     void SelectLevel()
     {
-        int rand = Random.Range(1, terrainsPref.Count);
+        int rand = Random.Range(0, terrainsPref.Count);
 
         actualTerrain = Instantiate(terrainsPref[rand]);
         actualTerrain.transform.name = terrainsPref[rand].transform.name;
